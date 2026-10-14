@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ギニア リズム図鑑</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: ワックスプリント柄の背景（canvas）の上に、クリーム色の布パネルを重ねる。地方→用途→カード→詳細 */
+:root{
+  --ground:#121110;   /* 黒の地（赤・黒・緑のパンアフリカンカラー） */
+  --cloth:#FFF4E0;    /* 生成りの布 */
+  --ink:#1B140F; --muted:#6E5B47; --line:#E6D3B3;
+  --gold:#F2B705; --red:#C81D25; --green:#0F7B45; --orange:#E8590C; --indigo:#2B2E9C; --pink:#D6336C;
+  --f-display:"Dela Gothic One","Hiragino Kaku Gothic StdN",sans-serif;
+  --f-body:"Zen Kaku Gothic New","Hiragino Sans","Noto Sans JP",sans-serif;
+  --f-mono:"DM Mono",ui-monospace,monospace;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+html{background:var(--ground)}
+body{background:var(--ground);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.7;padding-inline:16px;padding-block:20px 48px}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;display:grid;gap:16px}
+.panel{background:var(--cloth);border-radius:14px;box-shadow:0 6px 0 rgba(0,0,0,.35)}
+.kente{height:16px;border-radius:14px 14px 0 0;background:
+  repeating-linear-gradient(90deg,var(--gold) 0 26px,var(--green) 26px 34px,var(--gold) 34px 44px,var(--red) 44px 70px,#111 70px 76px,var(--red) 76px 84px,var(--gold) 84px 96px,var(--indigo) 96px 104px)}
+.kente.thin{height:8px;border-radius:0}
+header .in{padding:22px 24px 24px;display:grid;gap:10px}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;color:var(--red);text-transform:uppercase}
+h1{font-family:var(--f-display);font-weight:400;font-size:clamp(30px,6vw,54px);line-height:1.15;margin:0;text-wrap:balance}
+h1 .a{color:var(--green)} h1 .b{color:var(--orange)}
+.lead{color:var(--muted);max-width:62ch;margin:0}
+
+nav.regions{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.reg{all:unset;cursor:pointer;background:var(--cloth);border-radius:10px;padding:12px 14px;display:grid;gap:2px;box-shadow:0 4px 0 rgba(0,0,0,.35);border-top:6px solid var(--c,var(--gold))}
+.reg b{font-weight:700;font-size:15px}
+.reg small{color:var(--muted);font-size:12px;line-height:1.4}
+.reg .n{font-family:var(--f-mono);font-size:11px;color:var(--red)}
+.reg[aria-pressed="true"]{background:var(--c,var(--gold));color:#fff}
+.reg[aria-pressed="true"] small,.reg[aria-pressed="true"] .n{color:#FFF4E0}
+.reg:focus-visible,.chip:focus-visible,.card:focus-visible,.btn:focus-visible,input:focus-visible,.opt:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:12px 14px}
+.chip{all:unset;cursor:pointer;font-size:13px;padding:5px 12px;border-radius:999px;border:2px solid var(--line);background:#fff;color:var(--ink)}
+.chip[aria-pressed="true"]{background:var(--u,var(--orange));border-color:var(--u,var(--orange));color:#fff}
+.tools input{flex:1 1 200px;min-width:0;font:inherit;padding:7px 12px;border-radius:8px;border:2px solid var(--line);background:#fff;color:var(--ink)}
+.mode{margin-left:auto;display:flex;gap:6px}
+
+.layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,380px);gap:16px;align-items:start}
+@media (max-width:820px){.layout{grid-template-columns:1fr}}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.card{all:unset;cursor:pointer;background:var(--cloth);border-radius:10px;padding:14px 14px 14px 18px;display:grid;gap:4px;align-content:start;box-shadow:0 4px 0 rgba(0,0,0,.35);position:relative;overflow:hidden}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:repeating-linear-gradient(180deg,var(--k1) 0 10px,var(--k2) 10px 20px)}
+.card:hover{transform:translateY(-2px)}
+.card[aria-current="true"]{outline:3px solid var(--gold)}
+.card .nm{font-family:var(--f-display);font-size:19px;line-height:1.2}
+.card .kn{font-size:13px;color:var(--muted)}
+.card .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.tag{font-size:11px;padding:1px 8px;border-radius:4px;background:var(--u);color:#fff}
+.conf{font-family:var(--f-mono);font-size:11px;padding:1px 6px;border-radius:4px;border:1.5px solid currentColor;background:#fff}
+.c3{color:var(--green)}.c2{color:#A8650A}.c1{color:var(--red)}
+.empty{color:var(--muted);padding:20px;background:var(--cloth);border-radius:10px}
+
+aside.detail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);overflow:hidden}
+@media (max-width:820px){aside.detail{position:static}}
+.detail .in{padding:20px;display:grid;gap:14px}
+.detail h2{font-family:var(--f-display);font-weight:400;font-size:32px;margin:0;line-height:1.15}
+.detail .sub{color:var(--muted);font-size:13px;margin-top:-10px}
+.detail dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0;font-size:14px}
+.detail dt{color:var(--muted);font-size:12px;padding-top:2px}
+.detail dd{margin:0}
+.detail p{margin:0}
+.links{display:grid;gap:8px}
+.btn{display:flex;justify-content:space-between;align-items:center;text-decoration:none;color:#fff;border-radius:8px;padding:11px 14px;font-weight:700;background:var(--b)}
+.btn:hover{filter:brightness(1.08)}
+.btn span{font-family:var(--f-mono);font-size:12px;font-weight:400}
+.note{font-size:12px;color:var(--muted);border-top:2px dashed var(--line);padding-top:10px}
+
+.quiz{padding:22px;display:grid;gap:14px;max-width:640px}
+.quiz .q{font-size:17px}
+.quiz .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.quiz .opt{all:unset;cursor:pointer;text-align:center;padding:12px;border:2px solid var(--line);border-radius:8px;font-family:var(--f-display);font-size:16px;background:#fff}
+.quiz .opt.right{border-color:var(--green);background:var(--green);color:#fff}
+.quiz .opt.wrong{border-color:var(--red);background:var(--red);color:#fff}
+.score{font-family:var(--f-mono);font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.primer{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;padding:18px 20px}
+.primer div{font-size:14px}
+.primer b{display:block;font-size:15px;margin-bottom:2px;color:var(--red)}
+@media (prefers-reduced-motion:reduce){.card:hover{transform:none}}
+</style>
+</head>
+<body>
+
+<canvas id="bg" aria-hidden="true"></canvas>
+
+<div class="wrap">
+<header class="panel">
+  <div class="kente"></div>
+  <div class="in">
+    <div class="eyebrow">Djembe · Dundun · Dance</div>
+    <h1>ギニア <span class="a">リズム</span><span class="b">図鑑</span></h1>
+    <p class="lead">地方を選ぶ → リズムを選ぶ → 演奏とダンスを動画で見る。伝統リズムは口承なので、説明には確度を付けています（◎定説 ○よく言われる △要確認）。</p>
+  </div>
+</header>
+
+<nav class="regions" id="regions" aria-label="地方"></nav>
+
+<div class="tools panel">
+  <span id="uses" style="display:contents"></span>
+  <input id="q" type="search" placeholder="名前で探す（例：ソリ、Kuku）" aria-label="名前で探す">
+  <div class="mode">
+    <button class="chip" id="mList" aria-pressed="true" style="--u:var(--indigo)">図鑑</button>
+    <button class="chip" id="mQuiz" aria-pressed="false" style="--u:var(--indigo)">暗記クイズ</button>
+  </div>
+</div>
+
+<main id="main"></main>
+
+<section class="panel" style="overflow:hidden">
+  <div class="kente thin"></div>
+  <div class="primer">
+    <div><b>ジャンベ</b>手で叩くゴブレット型の太鼓。ソロと伴奏を担当。</div>
+    <div><b>ドゥンドゥン（3本）</b>ドゥンドゥンバ（大）・サンバン（中）・ケンケニ（小）。リズムの違いはここのフレーズに一番出る。聴き分けの鍵。</div>
+    <div><b>確かめるなら</b>Mamady Keïta、Famoudou Konaté の教本・CD が定番の資料。△の項目はここで確認を。</div>
+  </div>
+</section>
+</div>
+
+<script>
+/* ---------- 背景：オリジナルのワックスプリント風パターン ---------- */
+(function(){
+  const cv=document.getElementById("bg"),x=cv.getContext("2d");
+  const P=["#C81D25","#0F7B45","#F2B705","#C81D25","#0F7B45","#E8590C"];
+  const ground="#121110";
+  let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
+  const pick=(...ex)=>{let c;do{c=P[Math.floor(rnd()*P.length)]}while(ex.includes(c));return c};
+  function face(cx,cy,s){ // オリジナルの顔モチーフ：閉じた目の横顔ではなく正面の楕円顔
+    const skin=pick("#FFF4E0","#111111"),hair=pick(skin),acc=pick(skin,hair);
+    // 髪飾り（放射状の点）
+    for(let i=0;i<9;i++){const a=Math.PI+i*Math.PI/8;x.fillStyle=acc;x.beginPath();x.arc(cx+Math.cos(a)*s*.62,cy-s*.08+Math.sin(a)*s*.62,s*.07,0,7);x.fill()}
+    x.fillStyle=hair;x.beginPath();x.ellipse(cx,cy-s*.18,s*.46,s*.34,0,Math.PI,0);x.fill();
+    x.fillStyle=skin;x.beginPath();x.ellipse(cx,cy,s*.34,s*.44,0,0,7);x.fill();
+    const lc=skin==="#111111"?"#FFF4E0":"#111111";x.strokeStyle=lc;x.lineWidth=s*.04;x.lineCap="round";
+    [-1,1].forEach(d=>{x.beginPath();x.arc(cx+d*s*.13,cy-s*.04,s*.08,.15*Math.PI,.85*Math.PI);x.stroke()});
+    x.beginPath();x.moveTo(cx,cy);x.lineTo(cx,cy+s*.12);x.stroke();
+    x.fillStyle=acc;x.beginPath();x.ellipse(cx,cy+s*.24,s*.1,s*.045,0,0,7);x.fill();
+    [-1,1].forEach(d=>{x.fillStyle=acc;x.beginPath();x.arc(cx+d*s*.36,cy+s*.08,s*.05,0,7);x.fill()});
+  }
+  function rings(cx,cy,s){const n=4;for(let i=n;i>0;i--){x.fillStyle=i%2?pick():ground;x.beginPath();x.arc(cx,cy,s*.46*i/n,0,7);x.fill()}}
+  function diamonds(cx,cy,s){const c1=pick(),c2=pick(c1);for(let i=3;i>0;i--){x.fillStyle=i%2?c1:c2;const r=s*.46*i/3;x.beginPath();x.moveTo(cx,cy-r);x.lineTo(cx+r,cy);x.lineTo(cx,cy+r);x.lineTo(cx-r,cy);x.closePath();x.fill()}}
+  function zig(cx,cy,s){x.strokeStyle=pick();x.lineWidth=s*.08;x.lineJoin="round";for(let r=-1;r<=1;r++){x.beginPath();for(let i=0;i<=6;i++){const px=cx-s*.45+i*s*.15,py=cy+r*s*.28+(i%2?-1:1)*s*.08;i?x.lineTo(px,py):x.moveTo(px,py)}x.stroke()}}
+  function leaf(cx,cy,s){const c=pick();x.fillStyle=c;for(let i=0;i<4;i++){x.save();x.translate(cx,cy);x.rotate(i*Math.PI/2+Math.PI/4);x.beginPath();x.ellipse(0,-s*.24,s*.1,s*.22,0,0,7);x.fill();x.restore()}x.fillStyle=pick(c);x.beginPath();x.arc(cx,cy,s*.1,0,7);x.fill()}
+  function hero(cx,cy,s){ // オリジナル：ヘッドラップを巻いた英雄の横顔
+    const bg=pick(),fg=pick(bg),wrap=pick(bg,fg);
+    x.fillStyle=bg;x.beginPath();x.arc(cx,cy,s*.47,0,7);x.fill();
+    x.fillStyle=fg;x.beginPath();
+    x.moveTo(cx+s*.02,cy+s*.40);x.lineTo(cx-s*.02,cy+s*.20);
+    x.quadraticCurveTo(cx-s*.10,cy+s*.16,cx-s*.12,cy+s*.10);x.lineTo(cx-s*.10,cy+s*.06);
+    x.lineTo(cx-s*.14,cy+s*.03);x.lineTo(cx-s*.11,cy);x.lineTo(cx-s*.17,cy-s*.06);
+    x.lineTo(cx-s*.12,cy-s*.12);x.quadraticCurveTo(cx-s*.10,cy-s*.30,cx+s*.08,cy-s*.30);
+    x.quadraticCurveTo(cx+s*.26,cy-s*.28,cx+s*.24,cy-s*.04);x.quadraticCurveTo(cx+s*.22,cy+s*.14,cx+s*.16,cy+s*.20);
+    x.lineTo(cx+s*.18,cy+s*.40);x.closePath();x.fill();
+    x.fillStyle=wrap;x.beginPath();x.ellipse(cx+s*.06,cy-s*.30,s*.24,s*.16,-.25,0,7);x.fill();
+    x.strokeStyle=pick(wrap);x.lineWidth=s*.035;
+    for(let i=-1;i<=1;i++){x.beginPath();x.ellipse(cx+s*.06,cy-s*.30+i*s*.06,s*.20,s*.05,-.25,Math.PI*.1,Math.PI*.9);x.stroke()}
+  }
+  function mask(cx,cy,s){ // オリジナルのグラフィック仮面（白×黒）：閉じたアーモンド目・額のシェブロン・頬の点の瘢痕
+    const W="#FFF4E0",acc=[ "#C81D25","#0F7B45","#F2B705"][Math.floor(rnd()*3)];
+    x.fillStyle=W;x.strokeStyle=W;x.lineCap="round";x.lineJoin="round";
+    // 額のシェブロン3本
+    x.lineWidth=s*.045;
+    for(let i=0;i<3;i++){const y=cy-s*.40+i*s*.07;x.beginPath();x.moveTo(cx-s*.13,y+s*.05);x.lineTo(cx,y);x.lineTo(cx+s*.13,y+s*.05);x.stroke()}
+    // 眉（太いアーチ）
+    x.lineWidth=s*.05;
+    [-1,1].forEach(d=>{x.beginPath();x.arc(cx+d*s*.17,cy-s*.08,s*.13,Math.PI*1.15,Math.PI*1.85);x.stroke()});
+    // アーモンド形の閉じた目
+    [-1,1].forEach(d=>{const ex=cx+d*s*.17,ey=cy-s*.04;
+      x.beginPath();x.moveTo(ex-s*.12,ey);x.quadraticCurveTo(ex,ey-s*.08,ex+s*.12,ey);x.quadraticCurveTo(ex,ey+s*.08,ex-s*.12,ey);x.fill();
+      x.strokeStyle=ground;x.lineWidth=s*.022;x.beginPath();x.moveTo(ex-s*.08,ey);x.lineTo(ex+s*.08,ey);x.stroke();x.strokeStyle=W});
+    // 細い鼻筋＋先端のひし形
+    x.fillRect(cx-s*.025,cy-s*.10,s*.05,s*.24);
+    x.beginPath();x.moveTo(cx,cy+s*.10);x.lineTo(cx+s*.06,cy+s*.17);x.lineTo(cx,cy+s*.22);x.lineTo(cx-s*.06,cy+s*.17);x.closePath();x.fill();
+    // 頬の点の瘢痕（各3つ・アクセント色）
+    x.fillStyle=acc;
+    [-1,1].forEach(d=>{for(let i=0;i<3;i++){x.beginPath();x.arc(cx+d*s*.24,cy+s*.08+i*s*.075,s*.028,0,7);x.fill()}});
+    // 口：横長の楕円に一本線
+    x.fillStyle=W;x.beginPath();x.ellipse(cx,cy+s*.31,s*.10,s*.045,0,0,7);x.fill();
+    x.strokeStyle=ground;x.lineWidth=s*.018;x.beginPath();x.moveTo(cx-s*.08,cy+s*.31);x.lineTo(cx+s*.08,cy+s*.31);x.stroke();
+    // あごの短い縦線
+    x.strokeStyle=W;x.lineWidth=s*.03;
+    for(let i=-1;i<=1;i++){x.beginPath();x.moveTo(cx+i*s*.05,cy+s*.40);x.lineTo(cx+i*s*.05,cy+s*.46);x.stroke()}
+  }
+  const ACC=[rings,diamonds,zig,leaf];
+  function draw(){
+    const dpr=Math.min(devicePixelRatio||1,2),w=innerWidth,h=innerHeight;
+    cv.width=w*dpr;cv.height=h*dpr;x.setTransform(dpr,0,0,dpr,0,0);
+    x.fillStyle=ground;x.fillRect(0,0,w,h);seed=7;
+    const s=w<600?110:150;
+    for(let r=0;r*s<h+s;r++)for(let c=0;c*s<w+s;c++){
+      const cx=c*s+(r%2?s/2:0),cy=r*s*.9+s/2;
+      if((r+c)%2===0)mask(cx,cy,s*1.05);
+      else ACC[Math.floor(rnd()*ACC.length)](cx,cy,s*.62);
+    }
+    x.fillStyle="rgba(18,17,16,.15)";x.fillRect(0,0,w,h);
+  }
+  draw();let t;addEventListener("resize",()=>{clearTimeout(t);t=setTimeout(draw,150)});
+})();
+
+/* ---------- データ ---------- */
+const REGIONS=[
+ {id:"all",name:"すべて",desc:"全地方のリズム",c:"var(--indigo)"},
+ {id:"upper",name:"上ギニア",desc:"マリンケ。クルサ・カンカン・ハマナ",c:"var(--red)"},
+ {id:"lower",name:"下ギニア（海沿い）",desc:"スス・バガ・ランドゥマ",c:"var(--orange)"},
+ {id:"forest",name:"森林ギニア",desc:"南東部の森林地帯",c:"var(--green)"},
+ {id:"near",name:"周辺国",desc:"マリ・シエラレオネなど",c:"var(--pink)"},
+];
+const USES={"儀礼":"var(--indigo)","仕事":"var(--green)","力":"var(--red)","出会い":"var(--pink)","精霊・仮面":"#5B2A86","祝祭":"var(--orange)","女性の踊り":"#B5179E","近代":"#495057"};
+const R=[
+ {n:"Dununba",k:"ドゥヌンバ",r:"upper",p:"マリンケ",u:["力"],c:3,d:"「強い男たちの踊り」。村の力自慢の男性が踊る。1曲ではなく、たくさんの曲をまとめたファミリーの名前。"},
+ {n:"Bolokonondo",k:"ボロコノンド",r:"upper",p:"マリンケ",u:["力"],c:2,d:"ドゥヌンバ・ファミリーの1曲。ドゥンドゥンのフレーズで他の曲と区別する。"},
+ {n:"Takonani",k:"タコナニ",r:"upper",p:"マリンケ",u:["力"],c:2,d:"ドゥヌンバ・ファミリーの1曲。"},
+ {n:"Gbada",k:"グバダ（バダ）",r:"upper",p:"マリンケ",u:["力"],c:2,d:"ドゥヌンバ・ファミリーの1曲として知られる。"},
+ {n:"Soli",k:"ソリ",r:"upper",p:"マリンケ",u:["儀礼"],c:3,d:"割礼・成人儀礼のリズム。ゆっくりのソリと速いソリがある。"},
+ {n:"Kassa",k:"カッサ",r:"upper",p:"マリンケ",u:["仕事"],c:3,d:"畑仕事のときに叩いて、農作業をする人たちを励ます。"},
+ {n:"Mamaya",k:"ママヤ",r:"upper",p:"マリンケ",u:["祝祭"],c:3,d:"カンカンの祭りの踊り。着飾って優雅に踊る。"},
+ {n:"Moribayassa",k:"モリバヤサ",r:"upper",p:"マリンケ",u:["儀礼","女性の踊り"],c:3,d:"困難を乗り越えた女性が誓いを果たす儀式。ボロ服で踊り、最後にその服を埋める。"},
+ {n:"Sunguru Bani",k:"スングルバニ",r:"upper",p:"マリンケ",u:["女性の踊り"],c:2,d:"未婚の若い女性たちの踊り。"},
+ {n:"Mendiani",k:"メンディアニ",r:"upper",p:"マリンケ",u:["女性の踊り"],c:2,d:"若い女の子たちが踊る、速くて華やかな踊り。"},
+ {n:"Djansa",k:"ジャンサ",r:"upper",p:"マリンケ",u:["祝祭"],c:2,d:"キタ地方などのお祝い・社交の踊り。"},
+ {n:"Garangedon",k:"ガランゲドン",r:"upper",p:"マリンケ",u:["仕事"],c:2,d:"革職人（ガランケ）の家系のリズム。"},
+ {n:"Konden",k:"コンデン",r:"upper",p:"マリンケ",u:["精霊・仮面"],c:2,d:"子どもをしつける仮面（お化け役）が出てくるリズム。"},
+ {n:"Sofa",k:"ソファ",r:"upper",p:"マリンケ",u:["力"],c:1,d:"サモリ・トゥーレ軍の戦士たちのリズムと言われる。"},
+ {n:"Kurubi",k:"クルビ",r:"upper",p:"マリンケ",u:["祝祭","女性の踊り"],c:1,d:"ラマダン明けに若い女の子たちが踊る、と言われる。"},
+ {n:"Madan",k:"マダン",r:"upper",p:"マリンケ",u:["祝祭"],c:1,d:"祭りで盛り上がるエネルギッシュなリズム。"},
+ {n:"Yankadi",k:"ヤンカディ",r:"lower",p:"スス",u:["出会い"],c:3,d:"ゆっくりした男女の出会い・求愛の踊り。スカーフを渡して相手を選ぶ。"},
+ {n:"Makru",k:"マクル",r:"lower",p:"スス",u:["出会い"],c:3,d:"ヤンカディに続いて速くなる、自由に盛り上がるパート。セットで演奏される。"},
+ {n:"Kakilambe",k:"カキランベ",r:"lower",p:"バガ",u:["精霊・仮面"],c:3,d:"精霊カキランベの仮面が登場。豊穣や予言に関わる。"},
+ {n:"Sorsonet",k:"ソルソネ",r:"lower",p:"バガ",u:["祝祭","女性の踊り"],c:2,d:"お祭りのリズム。若い女の子が踊る、と言われる。"},
+ {n:"Tiriba",k:"ティリバ",r:"lower",p:"ランドゥマ",u:["儀礼","祝祭"],c:2,d:"成人儀礼の後のお祝いなどで演奏される。「大きな木」という意味説は確かな出典が見当たらない。"},
+ {n:"Sinte",k:"シンテ",r:"lower",p:"バガ／ランドゥマ",u:["女性の踊り"],c:1,d:"若い女の子たちの踊りと言われる。"},
+ {n:"Kuku",k:"クク",r:"forest",p:"森林地帯の諸民族",u:["仕事","女性の踊り"],c:3,d:"漁から戻った女性たちが踊ったと伝わる。今は祭りでも定番。"},
+ {n:"Djole",k:"ジョレ",r:"near",p:"テムネ（シエラレオネ）",u:["精霊・仮面","祝祭"],c:2,d:"仮面が出てくるお祝いの踊り。"},
+ {n:"Lamban",k:"ランバン",r:"near",p:"マンデ（マリなど）",u:["祝祭"],c:2,d:"グリオ（語り部）の喜び・お祝いの踊り。"},
+ {n:"Didadi",k:"ディダディ",r:"near",p:"ワスル（マリ）",u:["祝祭"],c:2,d:"マリのワスル地方の社交の踊り。"},
+ {n:"Liberté",k:"リベルテ",r:"upper",p:"ギニア全国",u:["近代"],c:3,d:"1958年のギニア独立を記念して作られた近代のリズム。"},
+];
+const CL={3:["◎","c3","ほぼ定説"],2:["○","c2","よく言われる"],1:["△","c1","要確認"]};
+const KP=[["var(--gold)","var(--red)"],["var(--green)","var(--gold)"],["var(--orange)","var(--indigo)"],["var(--pink)","var(--gold)"],["var(--red)","#111"]];
+const yt=s=>"https://www.youtube.com/results?search_query="+encodeURIComponent(s);
+const st={region:"all",use:null,q:"",sel:"Dununba",mode:"list",score:[0,0],cur:null,answered:false};
+try{const s=JSON.parse(localStorage.getItem("ra")||"{}");if(s.region)st.region=s.region;}catch(e){}
+const $=id=>document.getElementById(id);
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const regOf=id=>REGIONS.find(g=>g.id===id);
+
+function filtered(){
+  const q=st.q.trim().toLowerCase();
+  return R.filter(x=>(st.region==="all"||x.r===st.region)&&(!st.use||x.u.includes(st.use))&&(!q||(x.n+x.k).toLowerCase().includes(q)));
+}
+function renderNav(){
+  $("regions").innerHTML=REGIONS.map(g=>{
+    const n=g.id==="all"?R.length:R.filter(x=>x.r===g.id).length;
+    return `<button class="reg" data-r="${g.id}" style="--c:${g.c}" aria-pressed="${st.region===g.id}"><b>${g.name}</b><small>${g.desc}</small><span class="n">${n} RHYTHMS</span></button>`}).join("");
+  $("uses").innerHTML=Object.keys(USES).map(u=>`<button class="chip" data-u="${u}" style="--u:${USES[u]}" aria-pressed="${st.use===u}">${u}</button>`).join("");
+}
+function detail(x){
+  if(!x)return `<aside class="detail panel"><div class="in"><p>リズムを選ぶと、ここに詳細と動画リンクが出ます。</p></div></aside>`;
+  const c=CL[x.c];
+  return `<aside class="detail panel" aria-live="polite"><div class="kente"></div><div class="in">
+   <h2>${esc(x.n)}</h2>
+   <div class="sub">${esc(x.k)}</div>
+   <dl><dt>地方</dt><dd>${regOf(x.r).name}</dd><dt>民族</dt><dd>${esc(x.p)}</dd><dt>用途</dt><dd>${x.u.join("・")}</dd>
+   <dt>確度</dt><dd><span class="conf ${c[1]}">${c[0]}</span> ${c[2]}</dd></dl>
+   <p>${esc(x.d)}</p>
+   <div class="links">
+    <a class="btn" style="--b:var(--red)" href="${yt(x.n+" djembe rhythm")}" target="_blank" rel="noopener">リズム（演奏）を聴く <span>YouTube ↗</span></a>
+    <a class="btn" style="--b:var(--green)" href="${yt(x.n+" dance Guinea")}" target="_blank" rel="noopener">ダンスを見る <span>YouTube ↗</span></a>
+    <a class="btn" style="--b:var(--indigo)" href="${yt(x.n+" dundun")}" target="_blank" rel="noopener">ドゥンドゥンのパートを聴く <span>YouTube ↗</span></a>
+   </div>
+   <p class="note">リンクはYouTubeの検索結果を開きます。同じ名前でも別の曲やアレンジが混ざるので、ギニアの演奏者・舞踊団の動画を選ぶのがおすすめ。</p>
+  </div></aside>`;
+}
+function renderList(){
+  const list=filtered();
+  if(!list.find(x=>x.n===st.sel))st.sel=list[0]?.n||null;
+  const cards=list.length?list.map((x,i)=>{const c=CL[x.c],k=KP[R.indexOf(x)%KP.length];return `<button class="card" data-n="${esc(x.n)}" style="--k1:${k[0]};--k2:${k[1]}" aria-current="${x.n===st.sel}">
+    <span class="nm">${esc(x.n)}</span><span class="kn">${esc(x.k)}・${esc(x.p)}</span>
+    <span class="meta">${x.u.map(u=>`<span class="tag" style="--u:${USES[u]}">${u}</span>`).join("")}<span class="conf ${c[1]}">${c[0]}</span></span></button>`}).join("")
+    :`<p class="empty">条件に合うリズムがありません。地方や用途の絞り込みを外してみてください。</p>`;
+  $("main").innerHTML=`<div class="layout"><div class="grid">${cards}</div>${detail(R.find(x=>x.n===st.sel))}</div>`;
+}
+function newQ(){
+  const f=filtered(),pool=f.length?f:R;
+  const ans=pool[Math.floor(Math.random()*pool.length)];
+  const others=R.filter(x=>x!==ans).sort(()=>Math.random()-.5).slice(0,3);
+  st.cur={ans,opts:[ans,...others].sort(()=>Math.random()-.5)};st.answered=false;
+}
+function renderQuiz(){
+  if(!st.cur)newQ();
+  const {ans,opts}=st.cur;
+  $("main").innerHTML=`<div class="quiz panel">
+   <div class="score">正解 ${st.score[0]} / ${st.score[1]}　・　出題範囲：${regOf(st.region).name}${st.use?"・"+st.use:""}</div>
+   <div class="q"><b>このリズムは？</b><br>${esc(ans.d)}<br><small style="color:var(--muted)">ヒント：${esc(ans.p)}／${ans.u.join("・")}</small></div>
+   <div class="opts">${opts.map(o=>`<button class="opt" data-o="${esc(o.n)}">${esc(o.n)}</button>`).join("")}</div>
+   <div id="fb" aria-live="polite"></div>
+  </div>`;
+}
+function render(){renderNav();st.mode==="list"?renderList():renderQuiz();
+  $("mList").setAttribute("aria-pressed",st.mode==="list");$("mQuiz").setAttribute("aria-pressed",st.mode==="quiz");}
+
+document.addEventListener("click",e=>{
+  const t=e.target.closest("button");if(!t)return;
+  if(t.dataset.r){st.region=t.dataset.r;st.cur=null;try{localStorage.setItem("ra",JSON.stringify({region:st.region}))}catch(e){};render();}
+  else if(t.dataset.u){st.use=st.use===t.dataset.u?null:t.dataset.u;st.cur=null;render();}
+  else if(t.dataset.n){st.sel=t.dataset.n;renderList();if(innerWidth<=820)document.querySelector(".detail").scrollIntoView({behavior:"smooth"});}
+  else if(t.id==="mList"){st.mode="list";render();}
+  else if(t.id==="mQuiz"){st.mode="quiz";render();}
+  else if(t.dataset.o&&!st.answered){
+    st.answered=true;const ok=t.dataset.o===st.cur.ans.n;st.score[1]++;if(ok)st.score[0]++;
+    document.querySelectorAll(".opt").forEach(b=>{if(b.dataset.o===st.cur.ans.n)b.classList.add("right");else if(b===t)b.classList.add("wrong");});
+    $("fb").innerHTML=`<p>${ok?"正解！":"ざんねん。"}<b>${esc(st.cur.ans.n)}（${esc(st.cur.ans.k)}）</b></p><button class="chip" id="next" style="--u:var(--orange)" aria-pressed="false">次の問題</button>`;
+    document.querySelector(".score").textContent=`正解 ${st.score[0]} / ${st.score[1]}`;
+  }
+  else if(t.id==="next"){newQ();renderQuiz();}
+});
+$("q").addEventListener("input",e=>{st.q=e.target.value;st.cur=null;st.mode==="list"?renderList():renderQuiz();});
+render();
+</script>
+</body>
+</html>
