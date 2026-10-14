@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>ギニア リズム図鑑</title>
+<title>アフリカン リズム図鑑</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Zen+Kaku+Gothic+New:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap">
 <style>
@@ -101,8 +101,8 @@ aside.detail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);overf
   <div class="kente"></div>
   <div class="in">
     <div class="eyebrow">Djembe · Dundun · Dance</div>
-    <h1>ギニア <span class="a">リズム</span><span class="b">図鑑</span></h1>
-    <p class="lead">地方を選ぶ → リズムを選ぶ → 演奏とダンスを動画で見る。伝統リズムは口承なので、説明には確度を付けています（◎定説 ○よく言われる △要確認）。</p>
+    <h1>アフリカン <span class="a">リズム</span><span class="b">図鑑</span></h1>
+    <p class="lead">地域を選ぶ → リズムを選ぶ → 演奏とダンスを動画で見る。伝統リズムは口承なので、説明には確度を付けています（◎定説 ○よく言われる △要確認）。</p>
   </div>
 </header>
 
@@ -124,6 +124,7 @@ aside.detail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);overf
   <div class="primer">
     <div><b>ジャンベ</b>手で叩くゴブレット型の太鼓。ソロと伴奏を担当。</div>
     <div><b>ドゥンドゥン（3本）</b>ドゥンドゥンバ（大）・サンバン（中）・ケンケニ（小）。リズムの違いはここのフレーズに一番出る。聴き分けの鍵。</div>
+    <div><b>ジャンベ以外の太鼓</b>セネガルはサバール、ガーナはクパンロゴ太鼓やアトンパン、東アフリカは声のコーラスや大太鼓。地域で楽器がまったく違う。</div>
     <div><b>確かめるなら</b>Mamady Keïta、Famoudou Konaté の教本・CD が定番の資料。△の項目はここで確認を。</div>
   </div>
 </section>
@@ -211,11 +212,16 @@ aside.detail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);overf
 
 /* ---------- データ ---------- */
 const REGIONS=[
- {id:"all",name:"すべて",desc:"全地方のリズム",c:"var(--indigo)"},
- {id:"upper",name:"上ギニア",desc:"マリンケ。クルサ・カンカン・ハマナ",c:"var(--red)"},
- {id:"lower",name:"下ギニア（海沿い）",desc:"スス・バガ・ランドゥマ",c:"var(--orange)"},
- {id:"forest",name:"森林ギニア",desc:"南東部の森林地帯",c:"var(--green)"},
- {id:"near",name:"周辺国",desc:"マリ・シエラレオネなど",c:"var(--pink)"},
+ {id:"all",name:"すべて",desc:"全地域のリズム",c:"var(--indigo)",q:"Africa",dr:"drum"},
+ {id:"upper",name:"上ギニア",desc:"マリンケ。クルサ・カンカン・ハマナ",c:"var(--red)",q:"Guinea",dr:"djembe"},
+ {id:"lower",name:"下ギニア（海沿い）",desc:"スス・バガ・ランドゥマ",c:"var(--orange)",q:"Guinea",dr:"djembe"},
+ {id:"forest",name:"森林ギニア",desc:"南東部の森林地帯",c:"var(--green)",q:"Guinea",dr:"djembe"},
+ {id:"near",name:"マリ・シエラレオネ",desc:"ギニアの隣の国々",c:"var(--pink)",q:"Mali",dr:"djembe"},
+ {id:"senegal",name:"セネガル",desc:"ウォロフ。サバールの国",c:"#B5179E",q:"Senegal",dr:"sabar drum"},
+ {id:"civ",name:"コートジボワール",desc:"グロ・バウレ。仮面の踊り",c:"#5B2A86",q:"Ivory Coast",dr:"drum"},
+ {id:"ghana",name:"ガーナ・トーゴ",desc:"エウェ・ガ・アシャンティ・ダゴンバ",c:"#0B6E6E",q:"Ghana",dr:"drum"},
+ {id:"nigeria",name:"ナイジェリア・ベナン",desc:"イボ・ヨルバ・フォン",c:"#A8650A",q:"Nigeria",dr:"drum"},
+ {id:"east",name:"東アフリカ",desc:"ケニア・タンザニア・ルワンダ",c:"#495057",q:"East Africa",dr:"drum"},
 ];
 const USES={"儀礼":"var(--indigo)","仕事":"var(--green)","力":"var(--red)","出会い":"var(--pink)","精霊・仮面":"#5B2A86","祝祭":"var(--orange)","女性の踊り":"#B5179E","近代":"#495057"};
 const R=[
@@ -246,6 +252,17 @@ const R=[
  {n:"Lamban",k:"ランバン",r:"near",p:"マンデ（マリなど）",u:["祝祭"],c:2,d:"グリオ（語り部）の喜び・お祝いの踊り。"},
  {n:"Didadi",k:"ディダディ",r:"near",p:"ワスル（マリ）",u:["祝祭"],c:2,d:"マリのワスル地方の社交の踊り。"},
  {n:"Liberté",k:"リベルテ",r:"upper",p:"ギニア全国",u:["近代"],c:3,d:"1958年のギニア独立を記念して作られた近代のリズム。"},
+ {n:"Sabar",k:"サバール",r:"senegal",p:"ウォロフ（セネガル・ガンビア）",u:["祝祭","力"],c:3,d:"片手とスティックで叩く太鼓サバールに合わせ、足を高く蹴り上げる爆発的な踊り。結婚式や夜のダンスパーティーで踊られる。テンポが非常に速い。"},
+ {n:"Zaouli",k:"ザウリ",r:"civ",p:"グロ（コートジボワール）",u:["精霊・仮面","祝祭"],c:3,d:"仮面をつけた踊り手が、上半身をほぼ動かさずに足だけを超高速で刻む。2017年にユネスコ無形文化遺産に登録。"},
+ {n:"Goli",k:"ゴリ",r:"civ",p:"バウレ（コートジボワール）",u:["精霊・仮面","祝祭"],c:2,d:"仮面の祭り。円盤型の顔の仮面など、何種類もの仮面が順に登場する。"},
+ {n:"Agbekor",k:"アグベコール",r:"ghana",p:"エウェ（ガーナ・トーゴ）",u:["力"],c:3,d:"戦士の踊り。戦いの動きを再現する。今は葬儀や祭りでも踊られる。"},
+ {n:"Kpanlogo",k:"クパンロゴ",r:"ghana",p:"ガ（ガーナ）",u:["祝祭","近代"],c:3,d:"1960年代のアクラで生まれた若者の娯楽の踊り。クパンロゴ太鼓を使う。"},
+ {n:"Bamaya",k:"バマヤ",r:"ghana",p:"ダゴンバ（ガーナ北部）",u:["儀礼"],c:2,d:"男性がスカートをはき、腰を激しく振って踊る。雨乞いに由来すると伝わる。"},
+ {n:"Adowa",k:"アドワ",r:"ghana",p:"アシャンティ（ガーナ）",u:["儀礼","祝祭"],c:2,d:"手の動きで会話するように踊る優雅な踊り。葬儀や祭りで踊られる。"},
+ {n:"Atilogwu",k:"アティログゥ",r:"nigeria",p:"イボ（ナイジェリア）",u:["祝祭","力"],c:2,d:"アクロバットな跳躍が見せ場の踊り。名前は「魔法か？」という意味と言われる。"},
+ {n:"Zangbeto",k:"ザンベト",r:"nigeria",p:"フォンなど（ベナン・トーゴ）",u:["精霊・仮面"],c:2,d:"藁の衣装に覆われた「夜の番人」の精霊が、ぐるぐる回転しながら現れる。"},
+ {n:"Adumu",k:"アドゥム（アイグス）",r:"east",p:"マサイ（ケニア・タンザニア）",u:["儀礼","力"],c:3,d:"若い戦士が輪になり、一人ずつ真ん中で真上に高く跳ぶジャンプダンス。太鼓は使わず、声のコーラスで踊る。"},
+ {n:"Intore",k:"イントレ",r:"east",p:"ルワンダ",u:["力"],c:3,d:"戦士の踊り。長い白い髪飾りをつけ、槍と盾を持って力強く跳ぶ。"},
 ];
 const CL={3:["◎","c3","ほぼ定説"],2:["○","c2","よく言われる"],1:["△","c1","要確認"]};
 const KP=[["var(--gold)","var(--red)"],["var(--green)","var(--gold)"],["var(--orange)","var(--indigo)"],["var(--pink)","var(--gold)"],["var(--red)","#111"]];
@@ -276,9 +293,9 @@ function detail(x){
    <dt>確度</dt><dd><span class="conf ${c[1]}">${c[0]}</span> ${c[2]}</dd></dl>
    <p>${esc(x.d)}</p>
    <div class="links">
-    <a class="btn" style="--b:var(--red)" href="${yt(x.n+" djembe rhythm")}" target="_blank" rel="noopener">リズム（演奏）を聴く <span>YouTube ↗</span></a>
-    <a class="btn" style="--b:var(--green)" href="${yt(x.n+" dance Guinea")}" target="_blank" rel="noopener">ダンスを見る <span>YouTube ↗</span></a>
-    <a class="btn" style="--b:var(--indigo)" href="${yt(x.n+" dundun")}" target="_blank" rel="noopener">ドゥンドゥンのパートを聴く <span>YouTube ↗</span></a>
+    <a class="btn" style="--b:var(--red)" href="${yt(x.n+" "+regOf(x.r).dr+" rhythm")}" target="_blank" rel="noopener">リズム（演奏）を聴く <span>YouTube ↗</span></a>
+    <a class="btn" style="--b:var(--green)" href="${yt(x.n+" dance "+regOf(x.r).q)}" target="_blank" rel="noopener">ダンスを見る <span>YouTube ↗</span></a>
+    ${regOf(x.r).dr==="djembe"?`<a class="btn" style="--b:var(--indigo)" href="${yt(x.n+" dundun")}" target="_blank" rel="noopener">ドゥンドゥンのパートを聴く <span>YouTube ↗</span></a>`:""}
    </div>
    <p class="note">リンクはYouTubeの検索結果を開きます。同じ名前でも別の曲やアレンジが混ざるので、ギニアの演奏者・舞踊団の動画を選ぶのがおすすめ。</p>
   </div></aside>`;
